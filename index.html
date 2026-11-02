@@ -32,6 +32,10 @@
     </noscript>
     <!-- The root element for your Expo app. -->
     <div id="root"></div>
-  <script src="/waypoint-preview/_expo/static/js/web/entry-93925ac40272fbf60f2ac30da2805f02.js" defer></script>
+  <script>
+      var r = sessionStorage.getItem('wp-redirect');
+      if (r) { sessionStorage.removeItem('wp-redirect'); history.replaceState(null, '', r); }
+    </script>
+    <script src="/waypoint-preview/_expo/static/js/web/entry-93925ac40272fbf60f2ac30da2805f02.js" defer></script>
 </body>
 </html>
