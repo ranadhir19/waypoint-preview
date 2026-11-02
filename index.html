@@ -1,6 +1,43 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    <!-- TEMP DIAGNOSTIC TRAP (2026-11-02): surfaces in-browser errors via document.title; remove after diagnosis. -->
+    <script>
+      try {
+        window.__errs = [];
+        window.__wpTrap = function (msg) {
+          try {
+            var s = String(msg || 'unknown error').slice(0, 160);
+            window.__errs.push(s);
+            document.title = 'ERR: ' + s;
+          } catch (e) {}
+        };
+        window.addEventListener('error', function (ev) {
+          try {
+            var m = ev && ev.message ? ev.message : '';
+            var st = ev && ev.error && ev.error.stack ? String(ev.error.stack).split('\n')[1] || '' : '';
+            if (!m && ev && ev.target && ev.target.src) m = 'LOADFAIL ' + ev.target.src;
+            window.__wpTrap((m || 'error event') + (st ? ' @ ' + st.trim() : ''));
+          } catch (e) {}
+        }, true);
+        window.addEventListener('unhandledrejection', function (ev) {
+          try {
+            var r = ev && ev.reason;
+            var m2 = r && r.message ? r.message : String(r || 'unhandled rejection');
+            var st2 = r && r.stack ? String(r.stack).split('\n')[1] || '' : '';
+            window.__wpTrap(('REJ: ' + m2) + (st2 ? ' @ ' + st2.trim() : ''));
+          } catch (e) {}
+        });
+        setInterval(function () {
+          try {
+            if (window.__errs.length === 0) {
+              var root = document.getElementById('root');
+              document.title = 'WP root=' + (root ? root.childElementCount : 'none') + ' errs=' + window.__errs.length;
+            }
+          } catch (e) {}
+        }, 1500);
+      } catch (e) {}
+    </script>
     <meta charset="utf-8" />
     <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
